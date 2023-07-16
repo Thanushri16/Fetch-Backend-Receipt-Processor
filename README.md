@@ -11,10 +11,11 @@ A Receipt Processor web service built with Python and the Flask web framework th
 
 ## How to run the Python Receipt Processor application
 
-Open a new terminal and type the following commands in the directory that consists the 'dockerfile' and 'app.py'. The first command builds a docker image of the application and the second command runs the docker image as a docker container. 
+Open a new terminal and type the following commands in the directory that consists the 'dockerfile' and 'app.py'. The first command builds a docker image of the application and the second command runs the tests in the docker image as a docker container. The third command runs the python application as a docker container after all the tests pass their execution.
 ```
 docker build --tag receipt_processor .
 docker run -p 5000:5000 receipt_processor
+docker run -p 5000:5000 receipt_processor python app.py
 ```
 * After running the commands, the Flask application would have started on the URL -> http://localhost:5000/
 * Open a new terminal to use curl (in bash) or powershell (in windows) to test the GET and the POST requests. Alternatively, Postman can also be used for API testing.
@@ -45,6 +46,7 @@ docker stop <container_id>
 ## Notes about the web service designed
 * In order for the data to not persist when the application stops and to store information in memory without enabling data persistence, I relied on the concept of using python dictionaries to store data in the application without any database. When the application runs and receipts are posted, the receipts are stored in the dictionary with a unique receipt id which can be later retrieved to calculate the points associated with a receipt. However, when the application stops, the data stored in the dictionary also gets lost.
 * In addition to the two POST and the GET endpoints that was required for the web service, I also implemented two other GET requests. The first GET request '/receipts' retrieves a list of all the receipts and the information associated with it in a list of JSON objects format. The second GET request '/receipts/id' retrieves all the information associated with a receipt having that id as its receipt_id.
+* Additionally, for any production level code that has to be developed, it is important that testing be done for the API functionalities implemented. As a result, I have used the pytest module of python to test the web service functionalities.
 
 ## Assumptions
 * In the points calculation associated with the length of the item description (5th rule), it is mentioned that price multiplied by 0.2 be rounded to the nearest integer. I assumed that it means using the math.ceil function to find the next highest and closest integer because in Example 1: 2.4 was rounded of to 3. 
